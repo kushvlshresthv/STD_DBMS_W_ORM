@@ -1,0 +1,7 @@
+{
+  "orm-configuration": {
+    "url": "tcp://127.0.0.1:3306/kushaldb",
+    "username": "root", 
+    "password":  "kushal"
+  }
+}
