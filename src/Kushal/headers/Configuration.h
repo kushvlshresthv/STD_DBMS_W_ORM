@@ -63,7 +63,7 @@ public:
 
 
 	SessionFactory* buildSessionFactory() {
-		return new SessionFactory(url, username, password);
+		return SessionFactory::getSessionFactoryInstance(url, username, password);
 	}
 
 
@@ -77,7 +77,7 @@ public:
 
 //reads url, username, and password from default location
 
-void Configuration::configure() {
+inline void Configuration::configure() {
 	
 	//get jsonData from the default location
 	json jsonData = getJsonData(DEFAULT_LOCATION);
@@ -99,7 +99,7 @@ void Configuration::configure() {
 
 //reads url, username, and password from the given location
 
-void Configuration::configure(std::string fileUrl) {
+inline void Configuration::configure(std::string fileUrl) {
 
 	json jsonData = getJsonData(fileUrl);
 	if (validateJson(jsonData)) {
@@ -120,7 +120,7 @@ void Configuration::configure(std::string fileUrl) {
 
 //reads url, username, and password from the given filestream
 
-void Configuration::configure(std::ifstream& file) {
+inline void Configuration::configure(std::ifstream& file) {
 	json jsonData;
 
 	try {
@@ -151,7 +151,7 @@ void Configuration::configure(std::ifstream& file) {
 
 //returns json data from the provided file location
 
-json getJsonData(std::string fileUrl) {
+inline json getJsonData(std::string fileUrl) {
 	//creating unique_ptr object which stores ifstream* as its data member
 	std::unique_ptr<std::ifstream> file(new std::ifstream(fileUrl));
 
@@ -183,7 +183,7 @@ json getJsonData(std::string fileUrl) {
 
 //returns true if validation is successful
 
-bool Configuration::validateJson(json jsonData) {
+inline bool Configuration::validateJson(json jsonData) {
 
 	//validation logic: the json file must have username, password, and url inside orm-configuration
 	if (jsonData.contains("orm-configuration")) {
