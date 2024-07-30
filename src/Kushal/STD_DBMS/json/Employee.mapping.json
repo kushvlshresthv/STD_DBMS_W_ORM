@@ -1,0 +1,28 @@
+{
+  "class": {
+    "name": "Employee",
+    "table": "emp1",
+
+    "property": [
+      {
+        "id": "eno",
+        "column": "eno"
+      },
+
+      {
+        "name": "ename",
+        "column": "ename"
+      },
+
+      {
+        "name": "esal",
+        "column": "esal"
+      },
+
+      {
+        "name": "eaddr",
+        "column": "eaddr"
+      }
+    ]
+  }
+}

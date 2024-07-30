@@ -45,7 +45,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\nlohmann json\include;$(SolutionDir)STD_DBMS_W_ORM\src\Himanshu\headers;$(SolutionDir)STD_DBMS_W_ORM\src\Kushal\headers;$(SolutionDir)STD_DBMS_W_ORM\src\Manish\headers;$(SolutionDir)dependencies\rttr\include;$(SolutionDir)dependencies\mysql\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\nlohmann json\include;$(SolutionDir)STD_DBMS_W_ORM\src\Himanshu\headers;$(SolutionDir)STD_DBMS_W_ORM\src\Kushal\STD_DBMS\headers;$(SolutionDir)STD_DBMS_W_ORM\src\Kushal\ORM\headers;$(SolutionDir)STD_DBMS_W_ORM\src\Manish\headers;$(SolutionDir)dependencies\rttr\include;$(SolutionDir)dependencies\mysql\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>STATIC_CONCPP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -73,16 +73,18 @@
     <QtRcc Include="STD_DBMS_W_ORM.qrc" />
     <QtUic Include="STD_DBMS_W_ORM.ui" />
     <QtMoc Include="STD_DBMS_W_ORM.h" />
-    <ClCompile Include="src\Kushal\src\checkLogin.cpp" />
-    <ClCompile Include="src\Kushal\src\KushalTest.cpp" />
-    <ClCompile Include="src\Kushal\src\mainKushal.cpp" />
+    <ClCompile Include="src\Kushal\ORM\src\checkLogin.cpp" />
+    <ClCompile Include="src\Kushal\ORM\src\KushalTest.cpp" />
+    <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp" />
+    <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp" />
     <ClCompile Include="STD_DBMS_W_ORM.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Kushal\headers\Configuration.h" />
-    <ClInclude Include="src\Kushal\headers\Session.h" />
-    <ClInclude Include="src\Kushal\headers\SessionFactory.h" />
+    <ClInclude Include="src\Kushal\ORM\headers\Configuration.h" />
+    <ClInclude Include="src\Kushal\ORM\headers\Session.h" />
+    <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

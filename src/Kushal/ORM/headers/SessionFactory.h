@@ -4,10 +4,8 @@
 #include <cppconn/statement.h>
 #include <cppconn/driver.h>
 #include <cppconn/connection.h>
-#include <string_view>
 #include <Session.h>
 #include <exception>
-#include "Configuration.h"
 
 
 using namespace sql;
@@ -23,7 +21,7 @@ private:
 	//if connection fails, it throws std::exception();
 	//constructor is private to make the class a singleton class. 
 
-	SessionFactory(std::string& url, std::string& username, std::string& password) {
+	SessionFactory(std::string url, std::string username, std::string password) {
 		driver = get_driver_instance();
 		con = driver->connect(url, username, password);
 
@@ -44,7 +42,7 @@ public:
 	//if this method is executed first time, SessionFactory instance is created and returned
 	//if this method is executed after that, previous SessionFactory instance is returned
 
-	static SessionFactory* getSessionFactoryInstance(std::string url, std::string username, std::string password) {
+	static SessionFactory* getSessionFactoryInstance(const std::string& url, const std::string& username, const std::string& password) {
 		if (sessionFactory ) {
 			return sessionFactory;
 		}
@@ -57,7 +55,17 @@ public:
 
 	//buildSession passes the Statement object and creates a new Session Object
 	Session* buildSession() {
-		
+		return new Session(con->createStatement());
+	}
+
+
+	//deleting copy constructor and assignment operator
+	SessionFactory(SessionFactory& sf) = delete;
+	SessionFactory& operator = (const SessionFactory&) = delete;
+
+
+	~SessionFactory() {
+		con->close();
 	}
 	
 };

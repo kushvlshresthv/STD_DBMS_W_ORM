@@ -8,7 +8,7 @@
 #include <nlohmann/json.hpp>
 #include <memory>
 
-#define DEFAULT_LOCATION "./src/Kushal/json/configuration.orm.json"
+#define DEFAULT_LOCATION "./src/Kushal/STD_DBMS/json/configuration.orm.json"
 
 
 using namespace nlohmann;
@@ -143,38 +143,6 @@ inline void Configuration::configure(std::ifstream& file) {
 	}
 }
 
-
-
-
-
-
-
-//returns json data from the provided file location
-
-inline json getJsonData(std::string fileUrl) {
-	//creating unique_ptr object which stores ifstream* as its data member
-	std::unique_ptr<std::ifstream> file(new std::ifstream(fileUrl));
-
-
-	//checking if file is open
-	if (!file->is_open()) {
-		std::cerr << "The Configuration file could not be opened" << std::endl;
-		return false;
-	}
-
-
-	//creating jsonData and loading the data from file input stream into it
-	json jsonData;
-	try {
-		*file >> jsonData;
-	}
-	catch (json::parse_error& e) {
-		std::cerr << "Configuration file failed to parse:: " << e.what() << std::endl;
-		std::terminate();
-	}
-
-	return jsonData;
-}
 
 
 

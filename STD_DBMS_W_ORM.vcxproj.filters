@@ -40,24 +40,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kushal\src\checkLogin.cpp">
+    <ClCompile Include="src\Kushal\ORM\src\checkLogin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kushal\src\KushalTest.cpp">
+    <ClCompile Include="src\Kushal\ORM\src\KushalTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kushal\src\mainKushal.cpp">
+    <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Kushal\headers\Configuration.h">
+    <ClInclude Include="src\Kushal\ORM\headers\Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\headers\Session.h">
+    <ClInclude Include="src\Kushal\ORM\headers\Session.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\headers\SessionFactory.h">
+    <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
