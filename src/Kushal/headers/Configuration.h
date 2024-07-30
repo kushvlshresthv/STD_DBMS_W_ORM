@@ -8,6 +8,17 @@
 #include <nlohmann/json.hpp>
 #include <memory>
 
+#define DEFAULT_LOCATION "./src/Kushal/json/configuration.orm.json"
+
+
+using namespace nlohmann;
+
+
+//forward declarations
+json getJsonData(std::string fileURL);
+
+
+
 class Configuration {
 private:
 	std::string url;
@@ -44,29 +55,103 @@ public:
 
 
 	//load the configuration details from the provided file location
-	void configure(std::string_view fileUrl);		
+	void configure(std::string fileUrl);		
 
 
 	//load the configuration details from the provided 'ofstream' object
-	void configure(std::ifstream file);			
+	void configure(std::ifstream& file);			
 
 
-	SessionFactory buildSessionFactory() {
-
+	SessionFactory* buildSessionFactory() {
+		return new SessionFactory(url, username, password);
 	}
 
 
 	//validate the Json by passing the fileUrl for the json file: 
-	bool validateJson(std::string fileUrl);
+	bool validateJson(json jsonData);
 	
 };
 
 
 
-using namespace nlohmann;
-//returns true if validation is successful
-bool Configuration::validateJson(std::string fileUrl) {
 
+//reads url, username, and password from default location
+
+void Configuration::configure() {
+	
+	//get jsonData from the default location
+	json jsonData = getJsonData(DEFAULT_LOCATION);
+
+	//validate and extract url, username, and password
+	if (validateJson(jsonData)) {
+		url = jsonData["orm-configuration"]["url"].get<std::string>();
+		username = jsonData["orm-configuration"]["username"].get<std::string>();
+		password = jsonData["orm-configuration"]["password"].get<std::string>();			
+	}
+	else {
+		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
+		std::terminate();
+	}
+}
+
+
+
+
+//reads url, username, and password from the given location
+
+void Configuration::configure(std::string fileUrl) {
+
+	json jsonData = getJsonData(fileUrl);
+	if (validateJson(jsonData)) {
+		url = jsonData["orm-configuration"]["url"].get<std::string>();
+		username = jsonData["orm-configuration"]["username"].get<std::string>();
+		password = jsonData["orm-configuration"]["password"].get<std::string>();
+
+	}
+	else {
+		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
+		std::terminate();
+	}
+
+}
+
+
+
+
+//reads url, username, and password from the given filestream
+
+void Configuration::configure(std::ifstream& file) {
+	json jsonData;
+
+	try {
+		file >> jsonData;
+	}
+	catch (json::parse_error& e) {
+		std::cerr << "Configuration file failed to parse::" << std::endl;
+		std::terminate();
+	}
+
+	if (validateJson(jsonData)) {
+		url = jsonData["orm-configuration"]["url"].get<std::string>();
+		username = jsonData["orm-configuration"]["username"].get<std::string>();
+		password = jsonData["orm-configuration"]["password"].get<std::string>();
+
+	}
+	else {
+		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
+		std::terminate();
+	}
+}
+
+
+
+
+
+
+
+//returns json data from the provided file location
+
+json getJsonData(std::string fileUrl) {
 	//creating unique_ptr object which stores ifstream* as its data member
 	std::unique_ptr<std::ifstream> file(new std::ifstream(fileUrl));
 
@@ -85,14 +170,20 @@ bool Configuration::validateJson(std::string fileUrl) {
 	}
 	catch (json::parse_error& e) {
 		std::cerr << "Configuration file failed to parse:: " << e.what() << std::endl;
-		return false;
+		std::terminate();
 	}
 
+	return jsonData;
+}
 
-	//close the file after the data has been loaded to the json
-	(*file).close();
 
 
+
+
+
+//returns true if validation is successful
+
+bool Configuration::validateJson(json jsonData) {
 
 	//validation logic: the json file must have username, password, and url inside orm-configuration
 	if (jsonData.contains("orm-configuration")) {
@@ -100,8 +191,9 @@ bool Configuration::validateJson(std::string fileUrl) {
 			return true;
 		}
 	}
-
 	return false;
-
 }
+
+
+
 #endif

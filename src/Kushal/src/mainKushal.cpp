@@ -1,12 +1,15 @@
 #include "Configuration.h"
 #include <iostream>
+#include <fstream>
+
 
 void mainKushal() {
 	Configuration* cfg = new Configuration();
-	if (cfg->validateJson("./src/Kushal/json/configuration.orm.json")) {
-		std::cout << "success";
-	}
-	else {
-		std::cout << "failure";
-	}
+	cfg->configure();
+
+	cfg->configure("./src/Kushal/json/configuration.orm.json");
+
+	std::ifstream file1("./src/Kushal/json/configuration.orm.json");
+
+	cfg->configure(file1);
 }
