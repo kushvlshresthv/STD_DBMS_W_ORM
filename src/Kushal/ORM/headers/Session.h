@@ -9,6 +9,7 @@
 #include <rttr/property.h>
 #include <stdexcept>
 #include <cstddef>
+#include <cppconn/resultset.h>
 
 
 using namespace sql;
@@ -22,6 +23,7 @@ json getJsonData(std::string fileUrl);
 class Session {
 private: 
 	Statement* statement;
+	ResultSet* resultSet;
 public: 
 	Session(Statement* st) : statement{ st } {
 		statement->execute("set autocommit = 0");
@@ -29,7 +31,7 @@ public:
 
 
 	void save(variant obj);
-	void get();
+	variant get(std::string className, variant primaryKey);
 	void update();
 	void commit();
 	void rollback();
@@ -43,6 +45,7 @@ public:
 
 
 
+//throws runtime_error if the mapping file is not validated
 
 inline bool validateJson(const json& jsonData) {
 
@@ -52,7 +55,7 @@ inline bool validateJson(const json& jsonData) {
 
 			//the json file must have id or dataMember(name)
 			for (int i = 0; i < jsonData["class"]["property"].size(); i++) {
-				if (jsonData["class"]["property"][i].contains("id") || jsonData["class"]["property"][i].contains("name")) {
+				if (jsonData["class"]["property"][i].contains("id")) {
 					return true;
 				}
 			}
@@ -66,13 +69,13 @@ inline bool validateJson(const json& jsonData) {
 	}
 
 
-	throw std::runtime_error("the mapping file does not contain 'id'(primary key) or other 'name'(non-primary keys) ");
+	throw std::runtime_error("the mapping file does not contain 'id'(primary key)");
 	return false;
 }
 
 
 
-void Session::save(variant mainObject) {
+inline void Session::save(variant mainObject) {
 	type type_mainObject = mainObject.get_type();
 	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + type_mainObject.get_name().to_string() + ".mapping.json");
 
@@ -258,14 +261,102 @@ void Session::save(variant mainObject) {
 
 
 
-void Session::commit() {
+inline void Session::commit() {
 	statement->execute("commit");;
 }
 
 
-void Session::rollback() {
+inline void Session::rollback() {
 	statement->execute("rollback");
 }
+
+
+inline variant Session::get(std::string className, variant primaryKey) {
+	std::string sqlQuery = "select * from emp1 where eno = 222";
+
+	//first retrieve an empty object of the class
+
+	type type_obj = type::get_by_name(className);
+	variant var_obj = type_obj.create();
+	
+
+
+	//get the column names and data member names from the json file
+	
+	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/"+className+".mapping.json");
+
+	std::vector <std::string> dataMembers;
+	std::vector <std::string> columnNames;
+
+	if (validateJson(jsonData)) {
+
+		//propertiesInJson is an array that contains id/column and name/column pair
+		json propertiesInJson = jsonData["class"]["property"];
+
+
+		//extracting data member names into dataMembers vector
+
+		for (const json& item : propertiesInJson) {
+			//item is a single id/column or name/column pair
+			if (item.contains("id")) {
+				dataMembers.push_back(item["id"].get<std::string>());
+			}
+			else if (item.contains("name")) {
+				dataMembers.push_back(item["name"].get<std::string>());
+			}
+		}
+
+
+
+
+		//extracting column names into columNames
+		for (const json& item : propertiesInJson) {
+			if (item.contains("column")) {
+				columnNames.push_back(item["column"].get<std::string>());
+			}
+			else {
+				columnNames.push_back(dataMembers[columnNames.size()]);
+			}
+		}
+
+
+	}
+
+	
+
+
+
+	
+
+	//create the sql query
+
+
+	//get the result set object and assign the values to the empty object
+
+
+	property enoProp = type_obj.get_property("eno");
+
+	resultSet = statement->executeQuery(sqlQuery);
+
+	resultSet->next();
+	int value = resultSet->getInt("ENO");
+
+	enoProp.set_value(var_obj, value);
+
+	if (resultSet->next()) {
+		for (property prop : type_obj.get_properties()) {
+			type propType = prop.get_type();
+
+			if (propType == type::get<std::string>()) {
+				std::string value = resultSet->getString("demo");
+			}
+		}
+	}
+
+
+	return var_obj;
+}
+
 
 
 

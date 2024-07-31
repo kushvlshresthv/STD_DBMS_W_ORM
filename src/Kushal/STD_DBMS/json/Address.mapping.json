@@ -5,7 +5,7 @@
 
     "property": [
       {
-        "name": "state",
+        "id": "state",
         "column": "state"
       },
 

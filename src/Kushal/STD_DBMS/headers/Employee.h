@@ -21,9 +21,10 @@ public:
 
 	}
 
-	Employee() = default;
+	Employee() {
+		std::cout << "Employee constructor executed" << std::endl;
+	}
 };
-
 
 
 
