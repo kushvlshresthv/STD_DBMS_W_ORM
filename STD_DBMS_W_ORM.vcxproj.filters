@@ -72,5 +72,8 @@
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Address.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

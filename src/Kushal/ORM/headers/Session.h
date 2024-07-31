@@ -8,6 +8,7 @@
 #include <rttr/type>
 #include <rttr/property.h>
 #include <stdexcept>
+#include <cstddef>
 
 
 using namespace sql;
@@ -45,11 +46,13 @@ public:
 
 inline bool validateJson(const json& jsonData) {
 
-	//validation logic: the json file must have username, password, and url inside orm-configuration
+	//validation logic: the json file must have class name and table name
 	if (jsonData.contains("class")) {
 		if (jsonData["class"].contains("name") && jsonData["class"].contains("table")) {
+
+			//the json file must have id or dataMember(name)
 			for (int i = 0; i < jsonData["class"]["property"].size(); i++) {
-				if (jsonData["class"]["property"][i].contains("id") && jsonData["class"]["property"][i].contains("column")) {
+				if (jsonData["class"]["property"][i].contains("id") || jsonData["class"]["property"][i].contains("name")) {
 					return true;
 				}
 			}
@@ -63,7 +66,7 @@ inline bool validateJson(const json& jsonData) {
 	}
 
 
-	throw std::runtime_error("the mapping file does not contain 'id'(primary key) and/or its corresponding column");
+	throw std::runtime_error("the mapping file does not contain 'id'(primary key) or other 'name'(non-primary keys) ");
 	return false;
 }
 
@@ -85,7 +88,7 @@ void Session::save(variant mainObject) {
 		std::vector <std::string> columnNamesForPrimaryKeys;
 		std::vector <std::string> primaryDataMembers;
 
-		int totalData = jsonData["class"]["property"].size();
+		size_t totalData = jsonData["class"]["property"].size();
 
 		//propertiesInJson is an array that contains id/column and name/column pair
 		json propertiesInJson = jsonData["class"]["property"];
@@ -101,18 +104,32 @@ void Session::save(variant mainObject) {
 				dataMembers.push_back(item["name"].get<std::string>());
 			}
 		}
+		
 
 		
-		//extracting primary column names and non primary column names from json file
+		//extracting primary column names and non primary column names from json file present inside the property array
 		for (const json& item: propertiesInJson) {
-			if (item.contains("id")) {
+
+			//if both id and column are present, store the column name in columnNamesForPrimaryKeys
+			if (item.contains("id") && item.contains("column")) {
 				columnNamesForPrimaryKeys.push_back(item["column"].get<std::string>());
 			}
-			else if (item.contains("name")) {
+
+			//if only id is prseent, store the column name same as the id name
+			else if(item.contains("id") && !(item.contains("column"))) {
+				columnNamesForPrimaryKeys.push_back(primaryDataMembers[columnNamesForPrimaryKeys.size()]);
+
+			//if both dataMember and column are present, store the column name in the columnNamesForDataMembers
+			} else if (item.contains("name") && item.contains("column")) {
 				columnNamesForDataMembers.push_back(item["column"].get<std::string>());
 			}
-		}
 
+			//if only dataMember is present, store the column name same as the dataMember
+			else if(item.contains("name") && !(item.contains("column"))) {
+				columnNamesForDataMembers.push_back(dataMembers[columnNamesForDataMembers.size()]);
+			}
+
+		}
 	
 
 		//maing sql Query Format
@@ -124,17 +141,21 @@ void Session::save(variant mainObject) {
 
 		//adding primary column names
 
-		int size = columnNamesForPrimaryKeys.size();
-		int count = 0;
+		size_t size = columnNamesForPrimaryKeys.size();
 
+		int count = 0;
+		count = 0;
+		
 		for (std::string& columnName : columnNamesForPrimaryKeys) {
-			
+
 			sqlQuery = sqlQuery + columnName;
 			count++;
 			if (!(count == size)) {
 				sqlQuery = sqlQuery + ", ";
 			}
 		}
+		
+
 
 
 		//adding non-primary column names
@@ -143,7 +164,10 @@ void Session::save(variant mainObject) {
 			sqlQuery = sqlQuery + ") ";
 		}
 		else {
-			sqlQuery = sqlQuery + ", ";
+			if (!columnNamesForPrimaryKeys.empty()) {
+				sqlQuery = sqlQuery + ", ";
+			}
+
 			size = columnNamesForDataMembers.size();
 			int count = 0; 
 			for (std::string& columnName : columnNamesForDataMembers) {
@@ -167,19 +191,18 @@ void Session::save(variant mainObject) {
 		
 
 		//extracting primary data members and adding it to the sql query
-		
+
 		size = primaryDataMembers.size();
 		count = 0;
 
 		for (std::string& primaryDataMember : primaryDataMembers) {
-			
+
 			//returns the the property mentioned in the argument
-			property prop = type_mainObject.get_property(primaryDataMember); 
+			property prop = type_mainObject.get_property(primaryDataMember);
 			if (prop.is_valid()) {
 				variant var = prop.get_value(mainObject);
 				std::string value = var.to_string();
-
-				sqlQuery = sqlQuery + "'" +  value + "'";
+				sqlQuery = sqlQuery + "'" + value + "'";
 				count++;
 
 				if (!(count == size)) {
@@ -187,9 +210,10 @@ void Session::save(variant mainObject) {
 				}
 			}
 			else {
-				throw std::runtime_error("The data member: " + primaryDataMember +  "is not present in " + type_mainObject.get_name());
+				throw std::runtime_error("The data member: " + primaryDataMember + "is not present in " + type_mainObject.get_name());
 			}
 		}
+
 
 		//extracting non-primary data members and adding it to the sql query
 
@@ -197,7 +221,9 @@ void Session::save(variant mainObject) {
 			sqlQuery = sqlQuery + ") ";
 		}
 		else {
-			sqlQuery = sqlQuery + ", ";
+			if (!primaryDataMembers.empty()) {
+				sqlQuery = sqlQuery + ", ";
+			}
 			size = dataMembers.size();
 			count =0;
 			for (std::string& dataMember : dataMembers) {
@@ -222,6 +248,7 @@ void Session::save(variant mainObject) {
 			}
 		}
 		std::cout << sqlQuery << std::endl;
+
 		statement->executeUpdate(sqlQuery);
 	
 	} else {
@@ -232,7 +259,7 @@ void Session::save(variant mainObject) {
 
 
 void Session::commit() {
-	statement->execute("commit");
+	statement->execute("commit");;
 }
 
 

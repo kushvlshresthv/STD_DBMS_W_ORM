@@ -85,6 +85,7 @@
     <ClInclude Include="src\Kushal\ORM\headers\Configuration.h" />
     <ClInclude Include="src\Kushal\ORM\headers\Session.h" />
     <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Address.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h" />
   </ItemGroup>
