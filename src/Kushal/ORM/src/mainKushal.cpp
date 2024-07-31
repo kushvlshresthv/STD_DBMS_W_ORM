@@ -8,18 +8,22 @@
 
 
 void mainKushal() {
+
+	Configuration* cfg = new Configuration();
+	cfg->configure();
+	SessionFactory* sessionFactory = cfg->buildSessionFactory();
+	Session* session = sessionFactory->openSession();
 	try {
-		Configuration* cfg = new Configuration();
-		cfg->configure();
-		SessionFactory* sessionFactory = cfg->buildSessionFactory();
-		Session* session = sessionFactory->openSession();
-		Employee emp1(666, "Kushal", 9000, "Lalitpur");
+		Employee emp1(777, "Kushal", 9000, "Lalitpur");
 		session->save(emp1);
-		Student s1("222", "Shrestha", "Kathmandu");
+		Student s1("333", "Shrestha", "Kathmandu");
 		session->save(s1);
+
+		session->commit();
 	}
 	catch (std::exception e) {
 		std::cerr << "exception:: " << e.what() << std::endl;
+		session->rollback();
 	}
 
 }

@@ -23,7 +23,7 @@ private:
 	Statement* statement;
 public: 
 	Session(Statement* st) : statement{ st } {
-		
+		statement->execute("set autocommit = 0");
 	}
 
 
@@ -227,6 +227,17 @@ void Session::save(variant mainObject) {
 	} else {
 		throw std::runtime_error("json file could not be validated");
 	}
+}
+
+
+
+void Session::commit() {
+	statement->execute("commit");
+}
+
+
+void Session::rollback() {
+	statement->execute("rollback");
 }
 
 
