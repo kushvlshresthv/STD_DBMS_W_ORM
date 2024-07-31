@@ -13,8 +13,8 @@ json getJsonData(std::string fileUrl) {
 
 	//checking if file is open
 	if (!file->is_open()) {
-		std::cerr << "The Configuration file could not be opened" << std::endl;
-		return false;
+		std::cerr << "The json file could not be opened" << std::endl;
+		throw std::runtime_error("The json file could not be opened");
 	}
 
 
@@ -24,8 +24,8 @@ json getJsonData(std::string fileUrl) {
 		*file >> jsonData;
 	}
 	catch (json::parse_error& e) {
-		std::cerr << "Configuration file failed to parse:: " << e.what() << std::endl;
-		std::terminate();
+		std::cerr << "json file failed to parse:: " << e.what() << std::endl;
+		throw std::runtime_error("The json file could not be parsed");
 	}
 
 	return jsonData;

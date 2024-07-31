@@ -52,6 +52,9 @@
     <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kushal\STD_DBMS\RegisterClasses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kushal\ORM\headers\Configuration.h">
@@ -64,6 +67,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

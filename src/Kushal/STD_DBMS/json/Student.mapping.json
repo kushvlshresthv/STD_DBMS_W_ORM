@@ -1,0 +1,23 @@
+{
+  "class": {
+    "name": "Student",
+    "table": "student",
+
+    "property": [
+      {
+        "id": "sid",
+        "column": "sid"
+      },
+
+      {
+        "name": "sname",
+        "column": "sname"
+      },
+
+      {
+        "name": "saddr",
+        "column": "saddr"
+      }
+    ]
+  }
+}

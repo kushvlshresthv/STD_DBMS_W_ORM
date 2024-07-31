@@ -77,6 +77,7 @@
     <ClCompile Include="src\Kushal\ORM\src\KushalTest.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp" />
+    <ClCompile Include="src\Kushal\STD_DBMS\RegisterClasses.cpp" />
     <ClCompile Include="STD_DBMS_W_ORM.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -85,6 +86,7 @@
     <ClInclude Include="src\Kushal\ORM\headers\Session.h" />
     <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

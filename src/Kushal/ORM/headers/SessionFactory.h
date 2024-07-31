@@ -28,10 +28,10 @@ private:
 
 		if (con && con->isValid()) {
 			st = con->createStatement();
-			std::cout << "connection successful";
+			std::cout << "connection successful" << std::endl;
 		}
 		else {
-			std::cout << "conneciton failed";
+			std::cout << "conneciton failed"<<std::endl;
 			throw std::exception("connection failure");
 		}
 	}
@@ -54,7 +54,7 @@ public:
 
 
 	//buildSession passes the Statement object and creates a new Session Object
-	Session* buildSession() {
+	Session* openSession() {
 		return new Session(con->createStatement());
 	}
 

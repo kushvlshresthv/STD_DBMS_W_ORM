@@ -3,10 +3,11 @@
 
 #include <string>
 #include <string_view>
-#include <fstream>
 #include "SessionFactory.h"
 #include <nlohmann/json.hpp>
-#include <memory>
+#include <stdexcept>
+#include <fstream>
+
 
 #define DEFAULT_LOCATION "./src/Kushal/STD_DBMS/json/configuration.orm.json"
 
@@ -90,7 +91,7 @@ inline void Configuration::configure() {
 	}
 	else {
 		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
-		std::terminate();
+		throw std::runtime_error("Configuration file is not in proper format and connection could not be established with the database");
 	}
 }
 
@@ -110,7 +111,7 @@ inline void Configuration::configure(std::string fileUrl) {
 	}
 	else {
 		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
-		std::terminate();
+		throw std::runtime_error("Configuration file is not in proper format and connection could not be established with the database");
 	}
 
 }
@@ -126,7 +127,7 @@ inline void Configuration::configure(std::ifstream& file) {
 	try {
 		file >> jsonData;
 	}
-	catch (json::parse_error& e) {
+	catch (json::parse_error) {
 		std::cerr << "Configuration file failed to parse::" << std::endl;
 		std::terminate();
 	}
@@ -139,7 +140,7 @@ inline void Configuration::configure(std::ifstream& file) {
 	}
 	else {
 		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
-		std::terminate();
+		std::runtime_error("Configuration file is not in proper format and connectino could not be established with the database");
 	}
 }
 
