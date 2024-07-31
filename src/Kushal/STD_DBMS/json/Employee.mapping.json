@@ -5,19 +5,23 @@
 
     "property": [
       {
-        "id": "eno"
+        "id": "eno",
+        "column": "ENO"
       },
 
       {
-        "name": "ename"
+        "name": "ename",
+        "column":  "ENAME"
       },
 
       {
-        "name": "esal"
+        "name": "esal",
+        "column": "ESAL"
       },
 
       {
-        "name": "eaddr"
+        "name": "eaddr",
+        "column": "EADDR"
       }
     ]
   }

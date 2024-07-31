@@ -6,17 +6,17 @@
     "property": [
       {
         "id": "sid",
-        "column": "sid"
+        "column": "SID"
       },
 
       {
         "name": "sname",
-        "column": "sname"
+        "column": "SNAME"
       },
 
       {
         "name": "saddr",
-        "column": "saddr"
+        "column": "SADDR"
       }
     ]
   }

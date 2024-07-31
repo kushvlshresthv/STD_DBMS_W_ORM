@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <cppconn/resultset.h>
+#include <string_view>
 
 
 using namespace sql;
@@ -271,8 +272,8 @@ inline void Session::rollback() {
 }
 
 
-inline variant Session::get(std::string className, variant primaryKey) {
-	std::string sqlQuery = "select * from emp1 where eno = 222";
+inline variant Session::get(std::string className, variant primaryKeyValue) {
+	std::string sqlQuery;
 
 	//first retrieve an empty object of the class
 
@@ -287,12 +288,14 @@ inline variant Session::get(std::string className, variant primaryKey) {
 
 	std::vector <std::string> dataMembers;
 	std::vector <std::string> columnNames;
+	std::string primaryKeyColumn;
+	std::string tableName;
 
 	if (validateJson(jsonData)) {
 
 		//propertiesInJson is an array that contains id/column and name/column pair
 		json propertiesInJson = jsonData["class"]["property"];
-
+		tableName = jsonData["class"]["table"].get<std::string>();
 
 		//extracting data member names into dataMembers vector
 
@@ -300,6 +303,14 @@ inline variant Session::get(std::string className, variant primaryKey) {
 			//item is a single id/column or name/column pair
 			if (item.contains("id")) {
 				dataMembers.push_back(item["id"].get<std::string>());
+
+				//store the primaryKey column for writing sql query
+				if (item.contains("column")) {
+					primaryKeyColumn = item["column"].get<std::string>();
+				}
+				else {
+					primaryKeyColumn = item["id"].get<std::string>();
+				}
 			}
 			else if (item.contains("name")) {
 				dataMembers.push_back(item["name"].get<std::string>());
@@ -318,46 +329,57 @@ inline variant Session::get(std::string className, variant primaryKey) {
 				columnNames.push_back(dataMembers[columnNames.size()]);
 			}
 		}
-
-
 	}
-
-	
 
 
 
 	
 
 	//create the sql query
+	sqlQuery = "select * from " + tableName + " where " + primaryKeyColumn +  "= " + "'" + primaryKeyValue.to_string() + "'";
+	std::cout << sqlQuery << std::endl;
+
 
 
 	//get the result set object and assign the values to the empty object
+	
 
-
-	property enoProp = type_obj.get_property("eno");
-
+	//execute the sql query and retrieve the resultSet
 	resultSet = statement->executeQuery(sqlQuery);
 
-	resultSet->next();
-	int value = resultSet->getInt("ENO");
-
-	enoProp.set_value(var_obj, value);
-
 	if (resultSet->next()) {
-		for (property prop : type_obj.get_properties()) {
+		int count = 0;
+		for (std::string dataMember : dataMembers) {
+
+			//get the property
+
+			property prop = type_obj.get_property(dataMember);
 			type propType = prop.get_type();
 
+			//check the data type of property(data member) and execute the necessary code
 			if (propType == type::get<std::string>()) {
-				std::string value = resultSet->getString("demo");
+
+				std::string value = resultSet->getString(columnNames[count]);
+				prop.set_value(var_obj, value);
+
 			}
+			else if (propType == type::get<int>()) {
+
+				int value = resultSet->getInt(columnNames[count]);
+				prop.set_value(var_obj, value);
+			}
+			else if (propType == type::get<float>()) {
+
+				float value = (float)resultSet->getDouble(columnNames[count]);
+				prop.set_value(var_obj, value);
+
+			}
+			count++;
 		}
+
 	}
-
-
 	return var_obj;
 }
-
-
 
 
 #endif
