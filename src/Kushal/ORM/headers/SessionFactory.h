@@ -5,7 +5,7 @@
 #include <cppconn/driver.h>
 #include <cppconn/connection.h>
 #include <Session.h>
-#include <exception>
+#include <stdexcept>
 
 
 using namespace sql;
@@ -28,11 +28,11 @@ private:
 
 		if (con && con->isValid()) {
 			st = con->createStatement();
-			std::cout << "connection successful" << std::endl;
+			std::cout << "connection established successfully" << std::endl;
 		}
 		else {
 			std::cout << "conneciton failed"<<std::endl;
-			throw std::exception("connection failure");
+			throw std::runtime_error("connection failed to be established with the database");
 		}
 	}
 	

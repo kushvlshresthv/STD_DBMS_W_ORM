@@ -90,7 +90,6 @@ inline void Configuration::configure() {
 		password = jsonData["orm-configuration"]["password"].get<std::string>();			
 	}
 	else {
-		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
 		throw std::runtime_error("Configuration file is not in proper format and connection could not be established with the database");
 	}
 }
@@ -110,7 +109,6 @@ inline void Configuration::configure(std::string fileUrl) {
 
 	}
 	else {
-		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
 		throw std::runtime_error("Configuration file is not in proper format and connection could not be established with the database");
 	}
 
@@ -128,7 +126,7 @@ inline void Configuration::configure(std::ifstream& file) {
 		file >> jsonData;
 	}
 	catch (json::parse_error) {
-		std::cerr << "Configuration file failed to parse::" << std::endl;
+		throw std::runtime_error("Configuration file failed to parse::");
 		std::terminate();
 	}
 
@@ -139,7 +137,6 @@ inline void Configuration::configure(std::ifstream& file) {
 
 	}
 	else {
-		std::cerr << "Configuration file is not in proper format and connection could not be established with the database" << std::endl;
 		std::runtime_error("Configuration file is not in proper format and connectino could not be established with the database");
 	}
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 
 //returns json data from the provided file location
 using namespace nlohmann;
@@ -13,7 +14,6 @@ json getJsonData(std::string fileUrl) {
 
 	//checking if file is open
 	if (!file->is_open()) {
-		std::cerr << "The json file could not be opened" << std::endl;
 		throw std::runtime_error("The json file could not be opened");
 	}
 
@@ -24,7 +24,6 @@ json getJsonData(std::string fileUrl) {
 		*file >> jsonData;
 	}
 	catch (json::parse_error& e) {
-		std::cerr << "json file failed to parse:: " << e.what() << std::endl;
 		throw std::runtime_error("The json file could not be parsed");
 	}
 

@@ -6,11 +6,11 @@
 #include <rttr/registration>
 class Student {
 public: 
-	int sid;
+	std::string sid;
 	std::string sname;
 	std::string saddr;
 
-	Student(int no, std::string name, std::string addr)
+	Student(std::string no, std::string name, std::string addr)
 		:sid{ no }, sname{ name }, saddr{ addr }
 	{
 

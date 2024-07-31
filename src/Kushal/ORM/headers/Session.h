@@ -55,15 +55,15 @@ inline bool validateJson(const json& jsonData) {
 			}
 		}
 		else {
-			std::cerr << "the mapping file does not contain 'name' of the class or name of the 'table'";
+			throw std::runtime_error("The mapping file does not contain 'name' of the class or name of the 'table");
 		}
 	}
 	else {
-		std::cerr << "the mapping file does not contain 'class'" << std::endl;
+		throw std::runtime_error("the mapping file does not contain 'class'");
 	}
 
 
-	std::cerr << "the mapping file does not contain 'id'(primary key) and/or its corresponding column";
+	throw std::runtime_error("the mapping file does not contain 'id'(primary key) and/or its corresponding column");
 	return false;
 }
 
@@ -187,7 +187,6 @@ void Session::save(variant mainObject) {
 				}
 			}
 			else {
-				std::cerr << "The data member: " + primaryDataMember + " is not present in " + type_mainObject.get_name();
 				throw std::runtime_error("The data member: " + primaryDataMember +  "is not present in " + type_mainObject.get_name());
 			}
 		}
@@ -218,16 +217,14 @@ void Session::save(variant mainObject) {
 
 				}
 				else {
-					std::cerr << "The data member: " << dataMember << " is not present in " << type_mainObject.get_name();
 					throw std::runtime_error("The data member: " + dataMember + "is not present in " + type_mainObject.get_name());
 				}
 			}
 		}
-
 		std::cout << sqlQuery << std::endl;
+		statement->executeUpdate(sqlQuery);
 	
 	} else {
-		std::cerr << "json file could not be validated" << std::endl;
 		throw std::runtime_error("json file could not be validated");
 	}
 }
