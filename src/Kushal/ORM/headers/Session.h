@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <cppconn/resultset.h>
 #include <string_view>
+#include "Employee.h"
 
 
 using namespace sql;
@@ -33,7 +34,7 @@ public:
 
 	void save(variant obj);
 	variant get(std::string className, variant primaryKey);
-	void update();
+	void update(variant mainObject);
 	void commit();
 	void rollback();
 	void remove();
@@ -75,7 +76,7 @@ inline bool validateJson(const json& jsonData) {
 }
 
 
-
+//saves the given object to the database table based on the mapping details provided in the json file
 inline void Session::save(variant mainObject) {
 	type type_mainObject = mainObject.get_type();
 	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + type_mainObject.get_name().to_string() + ".mapping.json");
@@ -261,17 +262,20 @@ inline void Session::save(variant mainObject) {
 }
 
 
-
+//commit() commits our sql changes to the database
 inline void Session::commit() {
 	statement->execute("commit");;
 }
 
 
+//rollback() rollsback and operation performed int the database from previous commit incase of an error
 inline void Session::rollback() {
 	statement->execute("rollback");
 }
 
 
+
+//retrieves data in the form of an object based on the primary key value. 
 inline variant Session::get(std::string className, variant primaryKeyValue) {
 	std::string sqlQuery;
 
@@ -381,6 +385,156 @@ inline variant Session::get(std::string className, variant primaryKeyValue) {
 	return var_obj;
 }
 
+
+inline void Session::update(variant mainObject) {
+	
+	std::vector<std::string> dataMembers;
+	std::vector<std::string> columnNames;
+	std::string tableName;
+	std::string sqlQuery;
+	std::string primaryKeyColumn;
+	std::string primaryKeyDataMember;
+	type type_mainObject = mainObject.get_type();
+	std::string className = type_mainObject.get_name().to_string();
+
+	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + className + ".mapping.json");
+
+
+	//read the json file to obtains dataMember names and their corresponding column names into vectors
+	if (validateJson(jsonData)) {
+
+		//propertiesInJson is an array that contains id/column and name/column pair
+		json propertiesInJson = jsonData["class"]["property"];
+		tableName = jsonData["class"]["table"].get<std::string>();
+
+		//extracting data member names into dataMembers vector
+
+		for (const json& item : propertiesInJson) {
+			//item is a single id/column or name/column pair
+			if (item.contains("id")) {
+				dataMembers.push_back(item["id"].get<std::string>());
+				//storing the primaryKeyDataMember to retrieve old object
+				primaryKeyDataMember = item["id"].get<std::string>();
+
+				//store the primaryKey column for writing sql query
+				if (item.contains("column")) {
+					primaryKeyColumn = item["column"].get<std::string>();
+				}
+				else {
+					primaryKeyColumn = item["id"].get<std::string>();
+				}
+			}
+			else if (item.contains("name")) {
+				dataMembers.push_back(item["name"].get<std::string>());
+			}
+		}
+
+
+
+		//extracting column names into columNames
+		for (const json& item : propertiesInJson) {
+			if (item.contains("column")) {
+				columnNames.push_back(item["column"].get<std::string>());
+			}
+			else {
+				columnNames.push_back(dataMembers[columnNames.size()]);
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+	//retrieve the object based on the primary key value of the main object
+	variant var_oldObject;
+	type type_oldObject = type::get_by_name(className);
+	var_oldObject = type_oldObject.create();   //type_mainObject already created at the start of the method
+
+	
+
+
+
+		//create the sql query
+	sqlQuery = "select * from " + tableName + " where " + primaryKeyColumn + "= " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
+	std::cout << sqlQuery << std::endl;
+
+
+
+	//get the result set object and assign the values to the empty object
+	
+
+	//execute the sql query and retrieve the resultSet
+	resultSet = statement->executeQuery(sqlQuery);
+
+	if (resultSet->next()) {
+		int count = 0;
+		for (std::string dataMember : dataMembers) {
+
+			//get the property
+
+			property prop = type_oldObject.get_property(dataMember);
+			type propType = prop.get_type();
+
+			//check the data type of property(data member) and execute the necessary code
+			if (propType == type::get<std::string>()) {
+
+				std::string value = resultSet->getString(columnNames[count]);
+				prop.set_value(var_oldObject, value);
+
+			}
+			else if (propType == type::get<int>()) {
+
+				int value = resultSet->getInt(columnNames[count]);
+				prop.set_value(var_oldObject, value);
+			}
+			else if (propType == type::get<float>()) {
+
+				float value = (float)resultSet->getDouble(columnNames[count]);
+				prop.set_value(var_oldObject, value);
+
+			}
+			count++;
+		}
+	}
+
+	
+	
+
+
+	sqlQuery = "update " + tableName + " set ";
+	//compare the two objects and generate sql query to update the data members which are updated
+	int count = 0; 
+	bool flag = true;
+	for (std::string dataMember : dataMembers) {
+		variant variant_prop_oldObject = type_oldObject.get_property(dataMember).get_value(var_oldObject);   
+		variant variant_prop_mainObject = type_mainObject.get_property(dataMember).get_value(mainObject);
+		
+		std::cout << variant_prop_oldObject.to_string() << std::endl;
+		if (variant_prop_oldObject.to_string() != variant_prop_mainObject.to_string()) {
+			if (!flag) {
+				sqlQuery = sqlQuery + ",";
+			}
+			flag = false;
+
+			
+			sqlQuery = sqlQuery + columnNames[count] + "= " + "'" + variant_prop_mainObject.to_string() + "'";
+		}
+		
+		count++;
+	}
+
+	if (flag) return;
+	variant variant_primaryKey_mainObject = type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject);
+	sqlQuery = sqlQuery + " where " + primaryKeyColumn + " = " + variant_primaryKey_mainObject.to_string(); 
+
+	std::cout << sqlQuery << std::endl;
+	statement->executeUpdate(sqlQuery);
+
+}
 
 #endif
 

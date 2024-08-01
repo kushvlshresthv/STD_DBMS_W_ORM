@@ -27,20 +27,24 @@ void mainKushal() {
 
 		//session->commit();
 
-		variant var_employee = session->get("Employee", 111);
+		//variant var_employee = session->get("Employee", 111);
 
-		variant var_student = session->get("Student", "111");
+		//variant var_student = session->get("Student", "111");
 
-		variant var_address = session->get("Address", "Bagmati");
+		//variant var_address = session->get("Address", "Bagmati");
 
-		Employee* emp = var_employee.get_value<Employee*>();
-		std::cout << emp->eno << "\t" << emp->ename << "\t" << emp->esal << "\t" << emp->eaddr << std::endl;
+		//Employee* emp = var_employee.get_value<Employee*>();
+		//std::cout << emp->eno << "\t" << emp->ename << "\t" << emp->esal << "\t" << emp->eaddr << std::endl;
 
-		Student* std = var_student.get_value<Student*>();
-		std::cout << std->sid << "\t" << std->sname << "\t" << std->saddr << std::endl;
+		//Student* std = var_student.get_value<Student*>();
+		//std::cout << std->sid << "\t" << std->sname << "\t" << std->saddr << std::endl;
 		
-		Address* adr = var_address.get_value<Address*>();
-		std::cout << adr->state << "\t" << adr->district << "\t" << adr->city << std::endl;
+		//Address* adr = var_address.get_value<Address*>();
+		//std::cout << adr->state << "\t" << adr->district << "\t" << adr->city << std::endl;
+
+		Employee e1(111, "SHVL", 2000, "Pokhara");
+		session->update(e1);
+		session->commit();
 	}
 	catch (std::exception e) {
 		std::cerr << "exception:: " << e.what() << std::endl;
