@@ -46,11 +46,11 @@ void mainKushal() {
 		//Employee e1(444, "KuSSL", 7000, "Pokhara");
 		//session->saveOrUpdate(e1);
 
-		//Student s1("111", "KU", "Butwal");
-		//session->update(s1);
+		Student s1("111", "KU", "Butwal");
+		session->remove(s1);
 
-		ShoppingItems sh1{ "Mouse", 12, 1200.24 };
-		session->saveOrUpdate(sh1);
+		ShoppingItems sh1{ "Mouse", 12, 20 };
+		session->remove(sh1);
 
 
 

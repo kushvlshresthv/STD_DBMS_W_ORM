@@ -25,7 +25,7 @@ json getJsonData(std::string fileUrl);
 class Session {
 private: 
 	Statement* statement;
-	ResultSet* resultSet;
+	ResultSet* resultSet = nullptr;
 public: 
 	Session(Statement* st) : statement{ st } {
 		statement->execute("set autocommit = 0");
@@ -38,7 +38,7 @@ public:
 	void saveOrUpdate(variant mainObject);
 	void commit();
 	void rollback();
-	void remove();
+	void remove(variant mainObject);
 
 
 	~Session() {
@@ -55,7 +55,7 @@ inline bool validateJson(const json& jsonData) {
 	if (jsonData.contains("class")) {
 		int count = 0;
 
-		if (jsonData["class"].is_object() && jsonData["class"].is_object() && jsonData["class"].contains("name") && jsonData["class"].contains("table")) {
+		if (jsonData["class"].is_object() && jsonData["class"].contains("name") && jsonData["class"].contains("table")) {
 
 			//the json file must have id or dataMember(name)
 			for (int i = 0; i < jsonData["class"]["property"].size(); i++) {
@@ -203,9 +203,6 @@ inline void Session::save(variant mainObject) {
 		sqlQuery = sqlQuery + " values (";
 		
 		
-
-
-
 		
 
 		//extracting primary data members and adding it to the sql query
@@ -460,11 +457,6 @@ inline void Session::update(variant mainObject) {
 
 
 
-
-
-
-
-
 	//retrieve the object based on the primary key value of the main object
 	variant var_oldObject;
 	type type_oldObject = type::get_by_name(className);
@@ -600,18 +592,59 @@ inline void Session::saveOrUpdate(variant mainObject) {
 }
 
 
+inline void Session::remove(variant mainObject) {
+
+
+	//get the primary key and primary key data member
+
+	type type_mainObject = mainObject.get_type();
+	std::string className = type_mainObject.get_name().to_string();
+	std::string tableName;
+	std::string primaryKeyColumn;
+	std::string primaryKeyDataMember;
+	std::string sqlQuery;
+
+	//read the primary data member  and primary key column name from json file
+
+	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + className + ".mapping.json");
+
+	if (validateJson(jsonData)) {
+		//propertiesInJson is an array that contains id/column and name/column pair
+		json propertiesInJson = jsonData["class"]["property"];
+		tableName = jsonData["class"]["table"].get<std::string>();
+
+		//extracting primary key column name and primary key data member name
+
+		for (const json& item : propertiesInJson) {
+			//item is a single id/column or name/column pair
+			if (item.contains("id")) {
+				primaryKeyDataMember = item["id"].get<std::string>();
+				if (item.contains("column")) {
+					primaryKeyColumn = item["column"].get<std::string>();
+				}
+				else {
+					primaryKeyColumn = item["id"].get<std::string>();
+				}
+			}
+		}
+
+	}
+
+	resultSet = statement->executeQuery("select * from " + tableName + " where " + primaryKeyColumn + " = " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'");
+
+	if (!resultSet->next()) {
+		throw std::runtime_error("there is no data for '" + type_mainObject.get_name().to_string() + "' class with the primary data member value = '" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "' in the table '" + tableName + "'");
+	}
 
 
 
+	//form an sql query to delete the object from the table
+	sqlQuery = "delete from " + tableName + " where " + primaryKeyColumn + " = " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
 
+	std::cout << sqlQuery << std::endl;
 
-
-
-
-
-
-
-
+	statement->executeUpdate(sqlQuery);
+}
 
 #endif
 
