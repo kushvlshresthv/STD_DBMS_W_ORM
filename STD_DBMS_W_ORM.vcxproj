@@ -87,6 +87,7 @@
     <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Address.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\ShoppingItems.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

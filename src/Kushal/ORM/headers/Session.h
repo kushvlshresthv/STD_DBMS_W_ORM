@@ -50,28 +50,40 @@ public:
 
 //throws runtime_error if the mapping file is not validated
 inline bool validateJson(const json& jsonData) {
-
+	
 	//validation logic: the json file must have class name and table name
 	if (jsonData.contains("class")) {
-		if (jsonData["class"].contains("name") && jsonData["class"].contains("table")) {
+		int count = 0;
+
+		if (jsonData["class"].is_object() && jsonData["class"].is_object() && jsonData["class"].contains("name") && jsonData["class"].contains("table")) {
 
 			//the json file must have id or dataMember(name)
 			for (int i = 0; i < jsonData["class"]["property"].size(); i++) {
-				if (jsonData["class"]["property"][i].contains("id")) {
-					return true;
+				if (jsonData["class"]["property"][i].is_object() && jsonData["class"]["property"][i].contains("id")) {
+					count++;
 				}
+			}
+
+			if (count == 1) {
+				return true;
+			}
+			else if (count == 0) {
+				throw std::runtime_error("the " +jsonData["class"]["name"].get<std::string>() + " mapping file does not contain 'id'(primary key)");
+			}
+			else if (count >= 2) {
+				throw std::runtime_error("the " + jsonData["class"]["name"].get<std::string>() + " mapping file contains more than one 'id' (primary key)");
 			}
 		}
 		else {
-			throw std::runtime_error("The mapping file does not contain 'name' of the class or name of the 'table");
+			throw std::runtime_error("mapping file does not define the class object in the json file properly");
 		}
 	}
 	else {
-		throw std::runtime_error("the mapping file does not contain 'class'");
+		throw std::runtime_error("mapping file does not contain 'class'");
 	}
 
 
-	throw std::runtime_error("the mapping file does not contain 'id'(primary key)");
+
 	return false;
 }
 
@@ -80,24 +92,25 @@ inline bool validateJson(const json& jsonData) {
 inline void Session::save(variant mainObject) {
 	type type_mainObject = mainObject.get_type();
 	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + type_mainObject.get_name().to_string() + ".mapping.json");
-
-	if (validateJson(jsonData)) {
 	
+	
+	if (validateJson(jsonData)) {
 
 		std::string tableName = jsonData["class"]["table"].get<std::string>();  //get the table name from json file
 		
-
+		
 		//vector allows dynamic size
 		std::vector <std::string> dataMembers;
 		std::vector <std::string> columnNamesForDataMembers;
 		std::vector <std::string> columnNamesForPrimaryKeys;
 		std::vector <std::string> primaryDataMembers;
-
+		
 		size_t totalData = jsonData["class"]["property"].size();
-
+		
+		
 		//propertiesInJson is an array that contains id/column and name/column pair
 		json propertiesInJson = jsonData["class"]["property"];
-
+		
 
 		//extracting primary data member names and non primary data member names from json file. 
 		
@@ -110,7 +123,7 @@ inline void Session::save(variant mainObject) {
 			}
 		}
 		
-
+			////
 		
 		//extracting primary column names and non primary column names from json file present inside the property array
 		for (const json& item: propertiesInJson) {
@@ -532,7 +545,7 @@ inline void Session::update(variant mainObject) {
 
 	if (flag) return;
 	variant variant_primaryKey_mainObject = type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject);
-	sqlQuery = sqlQuery + " where " + primaryKeyColumn + " = " + variant_primaryKey_mainObject.to_string(); 
+	sqlQuery = sqlQuery + " where " + primaryKeyColumn + " = " + "'" + variant_primaryKey_mainObject.to_string() + "'";
 
 	std::cout << sqlQuery << std::endl;
 	statement->executeUpdate(sqlQuery);
