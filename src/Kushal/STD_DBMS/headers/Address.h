@@ -1,3 +1,6 @@
+#ifndef ADDRESS_H
+#define ADDRESS_H
+
 #include <string>
 class Address {
 public: 
@@ -13,3 +16,5 @@ public:
 
 	Address() = default;
 };
+
+#endif

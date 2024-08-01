@@ -78,5 +78,11 @@
     <ClInclude Include="src\Kushal\STD_DBMS\headers\ShoppingItems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Person.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee_With_Address.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

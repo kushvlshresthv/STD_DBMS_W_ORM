@@ -7,7 +7,8 @@
 #include "exception"
 #include "Address.h"
 #include "ShoppingItems.h"
-
+#include "Person.h"
+#include "Employee_With_Address.h"
 
 
 void mainKushal() {
@@ -17,16 +18,13 @@ void mainKushal() {
 	SessionFactory* sessionFactory = cfg->buildSessionFactory();
 	Session* session = sessionFactory->openSession();
 	try {
-		//Employee emp1(222, "Kushal", 9000, "Lalitpur");
+		//Employee emp1(333, "Kushal", 1900, "Lalitpur");
 		//session->save(emp1);
-
 		//Student s1("222", "Shrestha", "Kathmandu");
 		//session->save(s1);
 
 		//Address a1("Bagmati", "Lalitpur", "Pulchowk");
 		//session->save(a1);
-
-		//session->commit();
 
 		//variant var_employee = session->get("Employee", 111);
 
@@ -46,14 +44,19 @@ void mainKushal() {
 		//Employee e1(444, "KuSSL", 7000, "Pokhara");
 		//session->saveOrUpdate(e1);
 
-		Student s1("111", "KU", "Butwal");
-		session->remove(s1);
+		//Student s1("111", "KU", "Butwal");
+		//session->remove(s1);
 
-		ShoppingItems sh1{ "Mouse", 12, 20 };
-		session->remove(sh1);
+		//ShoppingItems sh1{ "Mouse", 12, 20 };
+		//session->remove(sh1);
+		//Address adr{ "Pokhara", "Draks", "Patna" };
+		//Employee_With_Address ea1{ 222, "Kushal", adr };
 
+		//session->save(ea1);
 
-
+		variant op = session->new_get("Employee_With_Address", 111);
+		Employee_With_Address* e = op.get_value<Employee_With_Address*>();
+		std::cout << e->ename;
 		session->commit();
 	}
 	catch (std::exception e) {
@@ -81,6 +84,41 @@ void mainKushal() {
 		std::cout << "Employee object created succesfully" << std::endl;
 		std::cout << e->eno << std::endl;
 	}
+}*/
+
+
+
+
+/*void mainKushal() {
+	Address address{ "bagmati", "lalitpur", "patan" };
+	Person person{ "kushal", address };
+	Employee e1{ 111, "Kushal", 9000, "Lalitpur" };
+	trial::save(person);
+	trial::save(e1);
+	Student s1{ "111", "Hi", "Hello" };
+	trial::save(s1);
+}*/
+
+/*void mainKushal() {
+	Address address{ "bagmati", "lalitpur", "patan" };
+	Person person{ "kushal", address };
+
+	variant var_address = address;
+	variant var_person = person;
+
+	type type_address = var_address.get_type();
+	type type_person = var_person.get_type();
+
+	Address newAddress{ "new bagmati", "new lalitpur", "new patan" };
+	variant var_newAddress = newAddress;
+
+	property prop_address = type_person.get_property("address");
+	prop_address.set_value(var_person, newAddress);
+	// Retrieve the value as a Person object
+	Person personWithNewAddress = var_person.get_value<Person>();
+
+	std::cout << "Hello" << std::endl;
+	std::cout << personWithNewAddress.address.state << std::endl;
 }*/
 
 

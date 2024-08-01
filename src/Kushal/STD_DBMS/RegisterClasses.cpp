@@ -2,7 +2,8 @@
 #include "Employee.h"
 #include "Address.h"
 #include <ShoppingItems.h>
-
+#include "Person.h"
+#include "Employee_With_Address.h"
 RTTR_REGISTRATION{
 
 	//registering the Student class
@@ -16,5 +17,15 @@ RTTR_REGISTRATION{
 
 	//registering the ShoppingItems
 	rttr::registration::class_<ShoppingItems>("ShoppingItems").constructor<>().property("itemNames", &ShoppingItems::itemNames).property("quantity", &ShoppingItems::quantity).property("price", &ShoppingItems::price);
+
+
+	//registering the Person Class
+
+	rttr::registration::class_<Person>("Person").constructor<>().property("name", &Person::name).property("address", &Person::address);
+
+
+	//registering Employee_With_Address
+
+	rttr::registration::class_<Employee_With_Address>("Employee_With_Address").constructor<>().property("eno", &Employee_With_Address::eno).property("ename", &Employee_With_Address::ename).property("eaddr", &Employee_With_Address::eaddr);
 
 }
