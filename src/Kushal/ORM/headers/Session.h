@@ -35,6 +35,7 @@ public:
 	void save(variant obj);
 	variant get(std::string className, variant primaryKey);
 	void update(variant mainObject);
+	void saveOrUpdate(variant mainObject);
 	void commit();
 	void rollback();
 	void remove();
@@ -48,7 +49,6 @@ public:
 
 
 //throws runtime_error if the mapping file is not validated
-
 inline bool validateJson(const json& jsonData) {
 
 	//validation logic: the json file must have class name and table name
@@ -382,6 +382,9 @@ inline variant Session::get(std::string className, variant primaryKeyValue) {
 		}
 
 	}
+	else {
+		throw std::runtime_error("no data found for the given primary key in the database table");
+	}
 	return var_obj;
 }
 
@@ -460,7 +463,6 @@ inline void Session::update(variant mainObject) {
 
 		//create the sql query
 	sqlQuery = "select * from " + tableName + " where " + primaryKeyColumn + "= " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
-	std::cout << sqlQuery << std::endl;
 
 
 
@@ -469,7 +471,7 @@ inline void Session::update(variant mainObject) {
 
 	//execute the sql query and retrieve the resultSet
 	resultSet = statement->executeQuery(sqlQuery);
-
+	
 	if (resultSet->next()) {
 		int count = 0;
 		for (std::string dataMember : dataMembers) {
@@ -500,6 +502,9 @@ inline void Session::update(variant mainObject) {
 			count++;
 		}
 	}
+	else {
+		throw std::runtime_error("the data for the given object is not available in the database table for updation");
+	}
 
 	
 	
@@ -512,8 +517,6 @@ inline void Session::update(variant mainObject) {
 	for (std::string dataMember : dataMembers) {
 		variant variant_prop_oldObject = type_oldObject.get_property(dataMember).get_value(var_oldObject);   
 		variant variant_prop_mainObject = type_mainObject.get_property(dataMember).get_value(mainObject);
-		
-		std::cout << variant_prop_oldObject.to_string() << std::endl;
 		if (variant_prop_oldObject.to_string() != variant_prop_mainObject.to_string()) {
 			if (!flag) {
 				sqlQuery = sqlQuery + ",";
@@ -533,8 +536,69 @@ inline void Session::update(variant mainObject) {
 
 	std::cout << sqlQuery << std::endl;
 	statement->executeUpdate(sqlQuery);
-
 }
+
+
+inline void Session::saveOrUpdate(variant mainObject) {
+	type type_mainObject = mainObject.get_type();
+	std::string className = type_mainObject.get_name().to_string();
+	std::string tableName;
+	std::string primaryKeyColumn;
+	std::string primaryKeyDataMember;
+	std::string sqlQuery;
+
+	//read the primary data member  and primary key column name from json file
+
+	json jsonData = getJsonData("./src/Kushal/STD_DBMS/json/" + className + ".mapping.json");
+
+	if (validateJson(jsonData)) {
+		//propertiesInJson is an array that contains id/column and name/column pair
+		json propertiesInJson = jsonData["class"]["property"];
+		tableName = jsonData["class"]["table"].get<std::string>();
+
+		//extracting primary key column name and primary key data member name
+
+		for (const json& item : propertiesInJson) {
+			//item is a single id/column or name/column pair
+			if (item.contains("id")) {
+				primaryKeyDataMember = item["id"].get<std::string>();
+				if (item.contains("column")) {
+					primaryKeyColumn = item["column"].get<std::string>();
+				}
+				else {
+					primaryKeyColumn = item["id"].get<std::string>();
+				}
+			}
+		}
+
+		
+		sqlQuery = "select * from " + tableName + " where " + primaryKeyColumn + "= " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
+
+
+		resultSet = statement->executeQuery(sqlQuery);
+		if (resultSet->next()) {
+			update(mainObject);
+		}
+		else {
+			save(mainObject);
+		}
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif
 

@@ -42,8 +42,11 @@ void mainKushal() {
 		//Address* adr = var_address.get_value<Address*>();
 		//std::cout << adr->state << "\t" << adr->district << "\t" << adr->city << std::endl;
 
-		Employee e1(111, "SHVL", 2000, "Pokhara");
-		session->update(e1);
+		Employee e1(444, "KuSHVL", 7000, "Pokhara");
+		session->saveOrUpdate(e1);
+
+		//Student s1("111", "KU", "Butwal");
+		//session->update(s1);
 		session->commit();
 	}
 	catch (std::exception e) {
