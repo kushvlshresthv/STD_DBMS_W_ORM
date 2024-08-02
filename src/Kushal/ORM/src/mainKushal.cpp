@@ -19,61 +19,63 @@ void mainKushal() {
 	SessionFactory* sessionFactory = cfg->buildSessionFactory();
 	Session* session = sessionFactory->openSession();
 	try {
-		//Employee emp1(333, "Kushal", 1900, "Lalitpur");
+		//Employee emp1(444, "Kushal", 1900, "Lalitpur");
 		//session->save(emp1);
-		//Student s1("222", "Shrestha", "Kathmandu");
+		//Student s1("444", "Shrestha", "Kathmandu");
 		//session->save(s1);
 
-		//Address a1("Bagmati", "Lalitpur", "Pulchowk");
+		//Address a1("Pokhara", "Lalitpur", "Pulchowk");
 		//session->save(a1);
 
-		//variant var_employee = session->get("Employee", 111);
+		//variant var_employee = session->get(Employee(), 444);
 
-		//variant var_student = session->get("Student", "111");
+		//variant var_student = session->get(Student(), "444");
 
-		//variant var_address = session->get("Address", "Bagmati");
+		//variant var_address = session->get(Address(), "Bagmati");
 
-		//Employee* emp = var_employee.get_value<Employee*>();
-		//std::cout << emp->eno << "\t" << emp->ename << "\t" << emp->esal << "\t" << emp->eaddr << std::endl;
+		//Employee emp = var_employee.get_value<Employee>();
+		//std::cout << emp.eno << "\t" << emp.ename << "\t" << emp.esal << "\t" << emp.eaddr << std::endl;
 
-		//Student* std = var_student.get_value<Student*>();
-		//std::cout << std->sid << "\t" << std->sname << "\t" << std->saddr << std::endl;
+		//Student std = var_student.get_value<Student>();
+		//std::cout << std.sid << "\t" << std.sname << "\t" << std.saddr << std::endl;
 		
-		//Address* adr = var_address.get_value<Address*>();
-		//std::cout << adr->state << "\t" << adr->district << "\t" << adr->city << std::endl;
+		//Address adr = var_address.get_value<Address>();
+		//std::cout << adr.state << "\t" << adr.district << "\t" << adr.city << std::endl;
 
-		//Employee e1(444, "KuSSL", 7000, "Pokhara");
+		//Employee e1(555, "KuSSL", 7000, "Pokhara");
 		//session->saveOrUpdate(e1);
 
-		//Student s1("111", "KU", "Butwal");
+		//Student s1("444", "KU", "Butwal");
 		//session->remove(s1);
 
-		//ShoppingItems sh1{ "Mouse", 12, 20 };
+		//ShoppingItems sh1{"Laptop", 12, 20 };
 		//session->remove(sh1);
-		Address adr{ "Dang", "Draks", "Patna" };
-		Employee_With_Address ea1{ 333, "Kushal", adr };
+
+
+		//Address adr{ "Dang", "Draks", "Patna" };
+		//Employee_With_Address ea1{ 999, "Kushal", adr };
 
 		//session->save(ea1);
 
-		//variant op = session->new_get("Employee_With_Address", 111, Employee_With_Address());
+		//variant op = session->get(Employee_With_Address(), 111);
 		//Employee_With_Address e = op.get_value<Employee_With_Address>();
 		//std::cout << e.ename;
 		//std::cout << e.eaddr.state << std::endl;
 
 
-		variant op1 = session->get(Employee_With_Address(), 333);
-		Employee_With_Address e1 = op1.get_value<Employee_With_Address>();
-		std::cout << e1.eno << std::endl;
-		std::cout << e1.ename << std::endl;
-		std::cout << e1.eaddr.state << std::endl;
-		std::cout << e1.eaddr.city << std::endl;
-		std::cout << e1.eaddr.district << std::endl;
+		//variant op1 = session->get(Employee_With_Address(), 999);
+		//Employee_With_Address e1 = op1.get_value<Employee_With_Address>();
+		//std::cout << e1.eno << std::endl;
+		//std::cout << e1.ename << std::endl;
+		//std::cout << e1.eaddr.state << std::endl;
+		//std::cout << e1.eaddr.city << std::endl;
+		//std::cout << e1.eaddr.district << std::endl;
 
-		//Student_With_Address swa1(111, adr);
+		//Student_With_Address swa1(999, adr);
 		//session->save(swa1);
 
 
-		variant var_swa1 = session->get(Student_With_Address(), 111);
+		variant var_swa1 = session->get(Student_With_Address(), 999);
 		Student_With_Address swa2 = var_swa1.get_value<Student_With_Address>();
 
 		std::cout << swa2.sid << std::endl;

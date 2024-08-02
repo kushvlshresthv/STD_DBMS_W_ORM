@@ -174,7 +174,7 @@ inline void Session::update(variant mainObject) {
 		//create the sql query
 	sqlQuery = "select * from " + tableName + " where " + primaryKeyColumn + "= " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
 
-
+	std::cout << "SQL QUERY: " << sqlQuery << std::endl;
 
 	//get the result set object and assign the values to the empty object
 	
@@ -244,7 +244,7 @@ inline void Session::update(variant mainObject) {
 	variant variant_primaryKey_mainObject = type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject);
 	sqlQuery = sqlQuery + " where " + primaryKeyColumn + " = " + "'" + variant_primaryKey_mainObject.to_string() + "'";
 
-	std::cout << sqlQuery << std::endl;
+	std::cout << "SQL QUERY: " << sqlQuery << std::endl;
 	statement->executeUpdate(sqlQuery);
 }
 
@@ -346,14 +346,14 @@ inline void Session::remove(variant mainObject) {
 	//form an sql query to delete the object from the table
 	sqlQuery = "delete from " + tableName + " where " + primaryKeyColumn + " = " + "'" + type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string() + "'";
 
-	std::cout << sqlQuery << std::endl;
+	std::cout << "SQL QUERY: " << sqlQuery << std::endl;
 
 	statement->executeUpdate(sqlQuery);
 }
 
 
 //new version of save method implemented
-inline void Session::save(variant mainObject, bool subObject, std::string primaryKeyForSubObject, std::string mainObjectName) {
+inline void Session::save(variant mainObject, bool subObject, std::string primaryKeyForSubObject, std::string newTableName) {
 
 	//primaryKeyForSubObject sets the same primary key for main object and sub object
 	//mainObjectName is used for table Name
@@ -385,7 +385,7 @@ inline void Session::save(variant mainObject, bool subObject, std::string primar
 			json propertiesInJson = jsonData["class"]["property"];
 			
 			if (subObject) {
-				tableName = mainObjectName + "_" + jsonData["class"]["table"].get<std::string>();
+				tableName = newTableName + "_" + jsonData["class"]["table"].get<std::string>();
 			}
 			else {
 				tableName = jsonData["class"]["table"].get<std::string>();
@@ -487,17 +487,17 @@ inline void Session::save(variant mainObject, bool subObject, std::string primar
 			}
 			else {
 				if (subObject == false) {
-					save(type_mainObject.get_property(dataMember).get_value(mainObject), true, type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string(), type_mainObject.get_name().to_string());
+					save(type_mainObject.get_property(dataMember).get_value(mainObject), true, type_mainObject.get_property(primaryKeyDataMember).get_value(mainObject).to_string(), tableName);
 				}
 				else {
-					save(type_mainObject.get_property(dataMember).get_value(mainObject), true, primaryKeyForSubObject,type_mainObject.get_name().to_string());
+					save(type_mainObject.get_property(dataMember).get_value(mainObject), true, primaryKeyForSubObject,tableName);
 				}
 				
 			}
 		}
 		sqlQuery.pop_back();
 		sqlQuery = sqlQuery + ")";
-		std::cout << sqlQuery << std::endl;
+		std::cout << "SQL QUERY: " << sqlQuery << std::endl;
 		statement->executeUpdate(sqlQuery);
 	}
 	else {
@@ -593,7 +593,7 @@ inline variant Session::get(variant main_object, variant primaryKeyValue, bool s
 
 
 
-	std::cout << sqlQuery << std::endl;
+	std::cout << "SQL QUERY: " <<sqlQuery << std::endl;
 
 
 
@@ -649,6 +649,9 @@ inline variant Session::get(variant main_object, variant primaryKeyValue, bool s
 					std::string newTableName = tableName + "_" + var_dataMember.get_type().get_name().to_string();
 
 					//getting the sub object             
+
+					//here primaryKeyValue.to_string() passes the primary key value sent by the caller as both the main object and sub object holds the same primary key value in the table
+
 					variant var_subObject = get(main_object,primaryKeyValue.to_string(), true, newTableName, dataMember);
 
 					//main object is used to access the property
@@ -707,7 +710,9 @@ inline variant Session::get(variant main_object, variant primaryKeyValue, bool s
 
 					//getting the new table name which is in the format: MainClass_SubClass
 					std::string newTableName = type_obj.get_name().to_string() + "_" + var_dataMember.get_type().get_name().to_string();
-       
+
+					//same primary key value obtained from the caller will be passed as both main object and all other sub object has the same primary key value in the table
+
 					variant var_subObject = get(var_obj, primaryKeyValue.to_string(), true, newTableName, dataMember);
 
 					var_obj.get_type().get_property(dataMember).set_value(var_obj, var_subObject);	
