@@ -55,6 +55,12 @@
     <ClCompile Include="src\Kushal\STD_DBMS\headers\Student.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Himanshu\mainHimanshu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manish\src\mainManish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kushal\ORM\headers\Configuration.h">

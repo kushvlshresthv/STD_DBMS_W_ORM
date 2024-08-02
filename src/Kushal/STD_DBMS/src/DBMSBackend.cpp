@@ -69,10 +69,6 @@ std::string searchStudent(int sid, Student& student) {
 }
 
 
-
-
-
-
 std::string updateStudent(Student& student) {
 	try {
 		cfg->configure();

@@ -55,7 +55,7 @@ void mainKushal() {
 				std::string department;
 				std::cout << std::endl;
 
-				std::cout << "student details: " << std::endl;;
+				std::cout << "student details: " << std::endl;
 
 				std::cout << "enter id(must be unique): ";
 				std::cin >> id;

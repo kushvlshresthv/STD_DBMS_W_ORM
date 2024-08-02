@@ -73,11 +73,13 @@
     <QtRcc Include="STD_DBMS_W_ORM.qrc" />
     <QtUic Include="STD_DBMS_W_ORM.ui" />
     <QtMoc Include="STD_DBMS_W_ORM.h" />
+    <ClCompile Include="src\Himanshu\mainHimanshu.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp" />
     <ClCompile Include="src\Kushal\STD_DBMS\headers\Student.h" />
     <ClCompile Include="src\Kushal\STD_DBMS\RegisterClasses.cpp" />
     <ClCompile Include="src\Kushal\STD_DBMS\src\DBMSBackend.cpp" />
+    <ClCompile Include="src\Manish\src\mainManish.cpp" />
     <ClCompile Include="STD_DBMS_W_ORM.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
