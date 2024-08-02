@@ -4,6 +4,7 @@
 #include <ShoppingItems.h>
 #include "Person.h"
 #include "Employee_With_Address.h"
+#include "Student_With_Address.h"
 RTTR_REGISTRATION{
 
 	//registering the Student class
@@ -27,5 +28,10 @@ RTTR_REGISTRATION{
 	//registering Employee_With_Address
 
 	rttr::registration::class_<Employee_With_Address>("Employee_With_Address").constructor<>().property("eno", &Employee_With_Address::eno).property("ename", &Employee_With_Address::ename).property("eaddr", &Employee_With_Address::eaddr);
+
+
+	//registering Student_With_Address
+
+	rttr::registration::class_<Student_With_Address>("Student_With_Address").constructor<>().property("sid", &Student_With_Address::sid).property("saddr", &Student_With_Address::saddr);
 
 }

@@ -9,6 +9,7 @@
 #include "ShoppingItems.h"
 #include "Person.h"
 #include "Employee_With_Address.h"
+#include "Student_With_Address.h"
 
 
 void mainKushal() {
@@ -60,14 +61,26 @@ void mainKushal() {
 		//std::cout << e.eaddr.state << std::endl;
 
 
-		variant op1 = session->new_get_v_2(Employee_With_Address(), 333);
+		variant op1 = session->get(Employee_With_Address(), 333);
 		Employee_With_Address e1 = op1.get_value<Employee_With_Address>();
 		std::cout << e1.eno << std::endl;
 		std::cout << e1.ename << std::endl;
 		std::cout << e1.eaddr.state << std::endl;
 		std::cout << e1.eaddr.city << std::endl;
 		std::cout << e1.eaddr.district << std::endl;
-		std::cout << "Works Fine";
+
+		//Student_With_Address swa1(111, adr);
+		//session->save(swa1);
+
+
+		variant var_swa1 = session->get(Student_With_Address(), 111);
+		Student_With_Address swa2 = var_swa1.get_value<Student_With_Address>();
+
+		std::cout << swa2.sid << std::endl;
+		std::cout << swa2.saddr.state << std::endl;
+		std::cout << swa2.saddr.district << std::endl;
+		std::cout << swa2.saddr.city << std::endl;
+
 
 		session->commit();
 	}
