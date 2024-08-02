@@ -1,163 +1,193 @@
-#include "Configuration.h"
-#include "SessionFactory.h"
 #include <string>
-#include "Session.h"
-#include "Employee.h"
+#include <iostream>
 #include "Student.h"
-#include "exception"
-#include "Address.h"
-#include "ShoppingItems.h"
-#include "Person.h"
-#include "Employee_With_Address.h"
-#include "Student_With_Address.h"
 
+std::string checkLogin(std::string, std::string);
+std::string addStudent(Student s);
+std::string searchStudent(int, Student&);
+std::string updateStudent(Student& student);
+std::string deleteStudent(int sid);
 
 void mainKushal() {
 
-	Configuration* cfg = new Configuration();
-	cfg->configure();
-	SessionFactory* sessionFactory = cfg->buildSessionFactory();
-	Session* session = sessionFactory->openSession();
-	try {
-		//Employee emp1(444, "Kushal", 1900, "Lalitpur");
-		//session->save(emp1);
-		//Student s1("444", "Shrestha", "Kathmandu");
-		//session->save(s1);
 
-		//Address a1("Pokhara", "Lalitpur", "Pulchowk");
-		//session->save(a1);
-
-		//variant var_employee = session->get(Employee(), 444);
-
-		//variant var_student = session->get(Student(), "444");
-
-		//variant var_address = session->get(Address(), "Bagmati");
-
-		//Employee emp = var_employee.get_value<Employee>();
-		//std::cout << emp.eno << "\t" << emp.ename << "\t" << emp.esal << "\t" << emp.eaddr << std::endl;
-
-		//Student std = var_student.get_value<Student>();
-		//std::cout << std.sid << "\t" << std.sname << "\t" << std.saddr << std::endl;
-		
-		//Address adr = var_address.get_value<Address>();
-		//std::cout << adr.state << "\t" << adr.district << "\t" << adr.city << std::endl;
-
-		//Employee e1(555, "KuSSL", 7000, "Pokhara");
-		//session->saveOrUpdate(e1);
-
-		//Student s1("444", "KU", "Butwal");
-		//session->remove(s1);
-
-		//ShoppingItems sh1{"Laptop", 12, 20 };
-		//session->remove(sh1);
+	//login page: 
 
 
-		//Address adr{ "Dang", "Draks", "Patna" };
-		//Employee_With_Address ea1{ 999, "Kushal", adr };
-
-		//session->save(ea1);
-
-		//variant op = session->get(Employee_With_Address(), 111);
-		//Employee_With_Address e = op.get_value<Employee_With_Address>();
-		//std::cout << e.ename;
-		//std::cout << e.eaddr.state << std::endl;
+	//take the username and password from the user and call checkLogin() method
+	//based on the return value of the checkLogin() method, display the output on the screen
+	//checkLogin() can return three string: 1) valid_username_password 
+										//  2) invalid_username
+										//	3) invalid_password
 
 
-		//variant op1 = session->get(Employee_With_Address(), 999);
-		//Employee_With_Address e1 = op1.get_value<Employee_With_Address>();
-		//std::cout << e1.eno << std::endl;
-		//std::cout << e1.ename << std::endl;
-		//std::cout << e1.eaddr.state << std::endl;
-		//std::cout << e1.eaddr.city << std::endl;
-		//std::cout << e1.eaddr.district << std::endl;
+	std::string username;
+	std::string password;
 
-		//Student_With_Address swa1(999, adr);
-		//session->save(swa1);
+	std::cout << "Enter Username: ";
+	std::cin >> username;
+
+	std::cout << "Enter Password: ";
+	std::cin >> password;
+
+	std::string status = checkLogin(username, password);
+
+	if (status == "valid_username_password") {
+		int option = 0; 
+		std::cout << "login success" << std::endl;
+
+		while(true) {
+			std::cout << std::endl;
+			std::cout << "select one of the option:: " << std::endl;
+			std::cout << "1) add student" << std::endl;
+			std::cout << "2) search student" << std::endl;
+			std::cout << "3) update student" << std::endl;
+			std::cout << "4) delete student" << std::endl;
+			std::cout << std::endl << "option: ";
+			std::cin >> option;
 
 
-		variant var_swa1 = session->get(Student_With_Address(), 999);
-		Student_With_Address swa2 = var_swa1.get_value<Student_With_Address>();
+			//takes id, name, addrses, and department information from the User and creates an object to call addStudent(Student student) method;
+			if (option == 1) {
+				int id;
+				std::string name;
+				std::string addr;
+				std::string department;
+				std::cout << std::endl;
 
-		std::cout << swa2.sid << std::endl;
-		std::cout << swa2.saddr.state << std::endl;
-		std::cout << swa2.saddr.district << std::endl;
-		std::cout << swa2.saddr.city << std::endl;
+				std::cout << "student details: " << std::endl;;
+
+				std::cout << "enter id(must be unique): ";
+				std::cin >> id;
+
+				std::cout << "enter name: ";
+				std::cin >> name;
+
+				std::cout << "enter address: ";
+				std::cin >> addr;
+
+				std::cout << "enter department: ";
+				std::cin >> department;
+
+				Student student(id, name, addr, department);
+
+				status = addStudent(student);
+				std::cout << std::endl;
+				if (status == "success") {
+					std::cout << "Student Inserted Successfully" << std::endl;
+				}
+				else if (status == "failed") {
+					std::cout << "Student Insertion Failure" << std::endl;
+				}
+				else if (status == "already_exists") {
+					std::cout << "Student already exists" << std::endl;
+				}
+			}
 
 
-		session->commit();
+			//take id from the user and call searchStudent(id, student) method
+			//this method searches for the student data for the given id in the database and loads the data into the student object provided in the 2nd argument
+
+			//searchStudent() returns "success" if the database table contains data for the given id else returns "failure
+			else if (option == 2) {
+				int id;
+				std::cout << "enter the id of the student to search:  ";
+				std::cin >> id;
+
+				Student student = Student();
+
+				status = searchStudent(id, student);
+
+				if (status == "success") {
+					std::cout << student.sid << "\t" << student.sname << "\t" << student.saddr << "\t" << student.sdepartment << std::endl;
+				}
+				else if (status == "failure") {
+					std::cout << "no student found with sid: " << id << std::endl;
+				}
+			}
+
+
+			else if (option == 3) {
+				int id;
+				std::cout << "enter the id of the student to update: ";
+				std::cin >> id;
+				Student student = Student();
+				status = searchStudent(id, student);
+
+				if (status == "success") {
+					std::cout << student.sid << "\t" << student.sname << "\t" << student.saddr << "\t" << student.sdepartment << std::endl;
+
+
+					//now take the updated values;
+					std::string name;
+					std::string addr;
+					std::string department;
+					std::cout << std::endl;
+
+					std::cout << "update details: " << std::endl;
+
+					std::cout << "enter name: ";
+					std::cin >> name;
+
+					std::cout << "enter address: ";
+					std::cin >> addr;
+
+					std::cout << "enter department: ";
+					std::cin >> department;
+
+					Student student(id, name, addr, department);
+
+					std::string status = updateStudent(student);
+
+					if (status == "success") {
+						std::cout << "student updation successful" << std::endl;
+					}
+					else if (status == "failure") {
+						std::cout << "student updation failure" << std::endl;
+					}
+
+				}
+				else if (status == "failure") {
+					std::cout << "no student found with sid: " << id << std::endl;
+				}
+			}
+
+
+			else if (option == 4) {
+				int id;
+				std::cout << "enter the id of the student to delete: ";
+				std::cin >> id;
+				Student student;
+
+				std::string status = searchStudent(id, student);
+
+
+				if (status == "success") {
+					status = deleteStudent(id);
+					if (status == "success") {
+						std::cout << "success" << std::endl;
+					}
+					else if (status == "failure") {
+						std::cout << "failure" << std::endl;
+					}
+				}
+				else if(status == "failure") {
+					std::cout << "no student found with sid: " << id << std::endl;
+				}
+			}
+		}
 	}
-	catch (std::exception e) {
-		std::cerr << "exception:: " << e.what() << std::endl;
-		session->rollback();
+	else if (status == "invalid_username") {
+		std::cout << "wrong username" << std::endl;
 	}
-
+	else if (status == "invalid_password") {
+		std::cout << "wrong password " << std::endl;
+	}
 }
 
 
-/*#include <rttr/registration>
-#include <rttr/type>
-#include <rttr/variant.h>
-
-void mainKushal() {
-	type  obj = type::get_by_name("Employee");
-
-	if (obj.is_valid()) {
-		variant var = obj.create();
-		property prop = obj.get_property("eno");
-		prop.set_value(var, 111);
 
 
-		Employee* e = var.get_value<Employee*>();
-		std::cout << "Employee object created succesfully" << std::endl;
-		std::cout << e->eno << std::endl;
-	}
-}*/
-
-
-
-
-/*void mainKushal() {
-	Address address{ "bagmati", "lalitpur", "patan" };
-	Person person{ "kushal", address };
-	Employee e1{ 111, "Kushal", 9000, "Lalitpur" };
-	trial::save(person);
-	trial::save(e1);
-	Student s1{ "111", "Hi", "Hello" };
-	trial::save(s1);
-}*/
-
-/*void mainKushal() {
-	Address address{ "bagmati", "lalitpur", "patan" };
-	Person person{ "kushal", address };
-
-	variant var_address = address;
-	variant var_person = person;
-
-	type type_address = var_address.get_type();
-	type type_person = var_person.get_type();
-
-	Address newAddress{ "new bagmati", "new lalitpur", "new patan" };
-	variant var_newAddress = newAddress;
-
-	property prop_address = type_person.get_property("address");
-	prop_address.set_value(var_person, newAddress);
-	// Retrieve the value as a Person object
-	Person personWithNewAddress = var_person.get_value<Person>();
-
-	std::cout << "Hello" << std::endl;
-	std::cout << personWithNewAddress.address.state << std::endl;
-}*/
-
-void mainKushal1() {
-	Student s1("111", "222", "333");
-	variant var_s1 = s1;
-
-	std::cout << &s1 << std::endl;
-	std::cout << &var_s1 << std::endl;
-
-	var_s1.get_type().get_property("sname").set_value(var_s1, "999");
-	std::cout << s1.sname;
-}
 
 
 

@@ -28,7 +28,7 @@ private:
 
 		if (con && con->isValid()) {
 			st = con->createStatement();
-			std::cout << "connection established successfully" << std::endl;
+			//std::cout << "connection established successfully" << std::endl;
 		}
 		else {
 			std::cout << "conneciton failed"<<std::endl;

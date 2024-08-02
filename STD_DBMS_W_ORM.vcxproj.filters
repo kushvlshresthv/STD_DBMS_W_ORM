@@ -40,12 +40,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kushal\ORM\src\checkLogin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kushal\ORM\src\KushalTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,6 +47,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Kushal\STD_DBMS\RegisterClasses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kushal\STD_DBMS\src\DBMSBackend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kushal\STD_DBMS\headers\Student.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,22 +66,28 @@
     <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Employee.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Student.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Address.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Address.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\ShoppingItems.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\ShoppingItems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Person.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Person.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee_With_Address.h">
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Employee_With_Address.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Student_With_Address.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Login_Details.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

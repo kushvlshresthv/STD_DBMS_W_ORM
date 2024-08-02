@@ -17,6 +17,11 @@
       {
         "name": "saddr",
         "column": "SADDR"
+      },
+
+      {
+        "name": "sdepartment",
+        "column": "SDEPARTMENT"
       }
     ]
   }

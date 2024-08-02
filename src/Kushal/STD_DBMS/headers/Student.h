@@ -1,26 +1,24 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
+#include <string>
 
-#include <iostream>
-#include <rttr/registration>
+
 class Student {
 public: 
-	std::string sid;
+	int sid;
 	std::string sname;
 	std::string saddr;
+	std::string sdepartment;
 
-	Student(std::string no, std::string name, std::string addr)
-		:sid{ no }, sname{ name }, saddr{ addr }
+	Student(int id, std::string name, std::string addr, std::string department)
+		:sid{ id }, sname{ name }, saddr{ addr }, sdepartment{ department }
 	{
 
 	}
 
+
 	Student() = default;
 };
 
-
-
 #endif
-
-

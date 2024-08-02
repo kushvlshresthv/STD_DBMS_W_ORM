@@ -1,0 +1,18 @@
+{
+  "class": {
+    "name": "Login_Details",
+    "table": "Login_Details",
+
+    "property": [
+      {
+        "id": "username",
+        "column": "username"
+      },
+
+      {
+        "name": "password",
+        "column": "password"
+      }
+    ]
+  }
+}

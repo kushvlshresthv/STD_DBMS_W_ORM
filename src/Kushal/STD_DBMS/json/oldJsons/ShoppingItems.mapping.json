@@ -1,0 +1,24 @@
+{
+  "class":  {
+    "name": "ShoppingItems",
+    "table": "ShopItems",
+
+    "property": [
+      {
+        "id": "itemNames",
+        "column": "ITEM"
+      },
+
+      {
+        "name": "quantity",
+        "column": "QTY"
+      },
+
+      {
+        "name": "price",
+        "column": "PRICE"
+      }
+    ]
+
+  }
+}

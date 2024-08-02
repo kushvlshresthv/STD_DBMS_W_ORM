@@ -73,11 +73,11 @@
     <QtRcc Include="STD_DBMS_W_ORM.qrc" />
     <QtUic Include="STD_DBMS_W_ORM.ui" />
     <QtMoc Include="STD_DBMS_W_ORM.h" />
-    <ClCompile Include="src\Kushal\ORM\src\checkLogin.cpp" />
-    <ClCompile Include="src\Kushal\ORM\src\KushalTest.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\mainKushal.cpp" />
     <ClCompile Include="src\Kushal\ORM\src\Read Json\getJsonData.cpp" />
+    <ClCompile Include="src\Kushal\STD_DBMS\headers\Student.h" />
     <ClCompile Include="src\Kushal\STD_DBMS\RegisterClasses.cpp" />
+    <ClCompile Include="src\Kushal\STD_DBMS\src\DBMSBackend.cpp" />
     <ClCompile Include="STD_DBMS_W_ORM.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -85,13 +85,14 @@
     <ClInclude Include="src\Kushal\ORM\headers\Configuration.h" />
     <ClInclude Include="src\Kushal\ORM\headers\Session.h" />
     <ClInclude Include="src\Kushal\ORM\headers\SessionFactory.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Address.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Employee_With_Address.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Person.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\ShoppingItems.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h" />
-    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student_With_Address.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Login_Details.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Address.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Employee.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Employee_With_Address.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Person.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\ShoppingItems.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Student.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\oldHeaders\Student_With_Address.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

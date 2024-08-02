@@ -1,0 +1,18 @@
+{
+  "class": {
+    "name": "Student_With_Address",
+    "table": "Student_With_Address",
+
+    "property": [
+      {
+        "id": "sid",
+        "column": "SID"
+      },
+
+      {
+        "name": "saddr",
+        "column": "SADDR"
+      }
+    ]
+  }
+}

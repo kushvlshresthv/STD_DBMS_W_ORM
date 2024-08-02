@@ -1,4 +1,49 @@
+#include <Login_Details.h>
+#include <rttr/registration>
 #include "Student.h"
+
+
+using namespace rttr;
+
+RTTR_REGISTRATION{
+	rttr::registration::class_<Login_Details>("Login_Details").constructor<>().property("username", &Login_Details::username).property("password", &Login_Details::password);
+
+	rttr::registration::class_<Student>("Student").constructor<>().property("sid", &Student::sid).property("sname", &Student::sname).property("saddr", &Student::saddr).property("sdepartment", &Student::sdepartment);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//these files have been moved to oldHeaders folder inside Kushal/STD_DBMS/headers
+
+//json mapping files for these have been moved to Kushal/STD_DBMS/json/oldJsons
+
+
+
+/* #include "Student.h"
 #include "Employee.h"
 #include "Address.h"
 #include <ShoppingItems.h>
@@ -35,3 +80,4 @@ RTTR_REGISTRATION{
 	rttr::registration::class_<Student_With_Address>("Student_With_Address").constructor<>().property("sid", &Student_With_Address::sid).property("saddr", &Student_With_Address::saddr);
 
 }
+*/

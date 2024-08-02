@@ -1,0 +1,21 @@
+{
+  "class": {
+    "name": "Address",
+    "table": "Address",
+
+    "property": [
+      {
+        "id": "state",
+        "column": "state"
+      },
+
+      {
+        "name": "district"
+      },
+
+      {
+        "name": "city"
+      }
+    ]
+  }
+}
