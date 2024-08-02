@@ -76,6 +76,7 @@ std::string updateStudent(Student& student) {
 		session = sessionFactory->openSession();
 		Student std = Student();
 		session->update(student);
+		session->commit();
 		return "success";
 	}
 	catch (std::exception& e) {
