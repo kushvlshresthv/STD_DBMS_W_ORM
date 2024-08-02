@@ -91,6 +91,7 @@
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Person.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\ShoppingItems.h" />
     <ClInclude Include="src\Kushal\STD_DBMS\headers\Student.h" />
+    <ClInclude Include="src\Kushal\STD_DBMS\headers\Student_With_Address.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

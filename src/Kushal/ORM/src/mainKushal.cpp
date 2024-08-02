@@ -49,14 +49,26 @@ void mainKushal() {
 
 		//ShoppingItems sh1{ "Mouse", 12, 20 };
 		//session->remove(sh1);
-		//Address adr{ "Pokhara", "Draks", "Patna" };
-		//Employee_With_Address ea1{ 222, "Kushal", adr };
+		Address adr{ "Dang", "Draks", "Patna" };
+		Employee_With_Address ea1{ 333, "Kushal", adr };
 
 		//session->save(ea1);
 
-		variant op = session->new_get("Employee_With_Address", 111);
-		Employee_With_Address* e = op.get_value<Employee_With_Address*>();
-		std::cout << e->ename;
+		//variant op = session->new_get("Employee_With_Address", 111, Employee_With_Address());
+		//Employee_With_Address e = op.get_value<Employee_With_Address>();
+		//std::cout << e.ename;
+		//std::cout << e.eaddr.state << std::endl;
+
+
+		variant op1 = session->new_get_v_2(Employee_With_Address(), 333);
+		Employee_With_Address e1 = op1.get_value<Employee_With_Address>();
+		std::cout << e1.eno << std::endl;
+		std::cout << e1.ename << std::endl;
+		std::cout << e1.eaddr.state << std::endl;
+		std::cout << e1.eaddr.city << std::endl;
+		std::cout << e1.eaddr.district << std::endl;
+		std::cout << "Works Fine";
+
 		session->commit();
 	}
 	catch (std::exception e) {
@@ -120,6 +132,20 @@ void mainKushal() {
 	std::cout << "Hello" << std::endl;
 	std::cout << personWithNewAddress.address.state << std::endl;
 }*/
+
+void mainKushal1() {
+	Student s1("111", "222", "333");
+	variant var_s1 = s1;
+
+	std::cout << &s1 << std::endl;
+	std::cout << &var_s1 << std::endl;
+
+	var_s1.get_type().get_property("sname").set_value(var_s1, "999");
+	std::cout << s1.sname;
+}
+
+
+
 
 
 
