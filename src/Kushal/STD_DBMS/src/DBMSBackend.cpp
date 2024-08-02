@@ -91,6 +91,7 @@ std::string deleteStudent(int sid) {
 		session = sessionFactory->openSession();
 		Student student(sid, "", "", "");
 		session->remove(student);
+		session->commit();
 		return "success";
 	}
 	catch (std::exception& e) {
